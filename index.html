@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="description" content="goals-network : d3.js visualization showing goal clustering">
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>goals-network</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/jonathaneunice/goals-network">View on GitHub</a>
+
+          <h1 id="project_title">goals-network</h1>
+          <h2 id="project_tagline">d3.js visualization showing goal clustering</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/jonathaneunice/goals-network/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/jonathaneunice/goals-network/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h3>
+<a id="goals-relationships" class="anchor" href="#goals-relationships" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Goals Relationships</h3>
+
+<p>This project visualizes relationships from a real-world dataset, mapping studied <em>elements</em> to related <em>goals</em>. There are thousands of elements, and about a dozen goals. The total is 5,771 nodes in the full data. </p>
+
+<p>Beyond this particular set of relationships, this project demonstrates techniques typically needed to clean up "dirty data" prior to visualization, and to display it an an appealing fashion. </p>
+
+<iframe src="https://jonathaneunice.github.io/goals-network/graph.html"
+        style="width: 576px; height: 500px">
+ 
+<h4>
+<a id="how-it-works" class="anchor" href="#how-it-works" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>How It Works</h4>
+
+<p>Basic data cleanups are done in <code>csvclean.py</code>, in Python (using its wonderful <a href="http://pandas.pydata.org/">Pandas</a> and <a href="http://www.numpy.org/">NumPy</a> tools). Column names are sanitized, data are trimmed of excess spaces, and columns 
+that are known to be pointless are dropped. The script emits more hygienic CSV.</p>
+
+<p><code>graph.js</code> does the heavy lifting, converting CSV into a JavaScript data structure suitable for the incomparable <a href="https://d3js.org/">d3.js</a> and its force-directed graph layout.</p>
+
+<p>Much of the visualization core is stock d3. But making things look "right" takes a little more work than just "hey! d3! do your thing!" Interesting aspects include:</p>
+
+<ul>
+<li>The goal graphs are largely implied by, not explicit in, the data. 
+Goal nodes must be purposefully created and managed; they don't just 
+"fall out of" the input data.</li>
+<li>Multiple classes/kinds of nodes. Goal nodes behave quite differently 
+from element nodes. E.g. they are explicitly placed, they are much larger,
+they are custom-labeled. Those aspects need significant tending.</li>
+<li>Making sure goal nodes are the focus of the visualization, and so they're
+locked into the center of the display. They do eventually move toward their
+associated element nodes, but only after the simulation has "settled" a bit.</li>
+<li>Force layout graphs with large numbers of nodes can have *tremendous*
+virtual forces impinging on the nodes, especially in the first few ticks of an
+animation, leading to wild visual oscillations, and pushing nodes apart. Taming
+that early "Big Bang" period's a bit of an art. This visualization uses several
+techniques, including pre-placing element nodes in the vicinity of their associated
+goals, 
+fixing the goal' nodes at the center as virtual anchors, and dynamically resizing
+the viewing area (SVG `viewBox`) as the simulation progresses. It doesn't seek
+to eliminate flutter as much as "keep it down to a dull roar."
+</li>
+<li>The graph is typically rendered in a "dark" style (color on dark background), 
+which tends to highlight the subtler lines and smaller groupings that can be 
+easily "washed out" in a lighter rendering on-screen. Reversed images are
+available for printing on paper, where the reproduction process is less prone 
+to overwhelming fine lines and color distinctions.</li>
+<li>Andrew Brehaut's <a href="https://github.com/brehaut/color-js">color-js</a> library
+is used to blend the colors of element nodes that connect to more than one
+goal node. Ariel Aizemberg’s 
+<a href="http://bl.ocks.org/aaizemberg/78bd3dade9593896a59d">study of
+categorical colors</a>
+(especially the ones favored by Google)
+is used to set a pleasing categorical color scheme. Thanks also Google!
+</li>
+<li>**NB** This layout was designed to create static images for
+presentation and publication, so it lacks some optimizations
+common in fully interactive displays. The placement
+algorithm, in particular, trades away rendering speed for
+simplicity and time-to-market. It uses a simple
+"wait for things to settle, then shift
+goal nodes" approach.
+</li>
+</ul>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">goals-network maintained by <a href="https://github.com/jonathaneunice">jonathaneunice</a></p>
+        <p>Published with <a href="https://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
